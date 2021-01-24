@@ -4,7 +4,7 @@ The editor wants to run a series of feature stories about the health risks facin
 The data set included with the assignment is based on 2014 ACS 1-year estimates from the US Census Bureau, but you are free to investigate a different data set. The current data set includes data on rates of income, obesity, poverty, etc. by state. MOE stands for "margin of error."
 
 ## Core Assignment: D3 Dabbler (Required Assignment)
-![Example Scatter Plot](/images/logo.png)
+![Example Scatter Plot](images/exampleScatter.png)
 You need to create a scatter plot between two of the data variables such as Healthcare vs. Poverty or Smokers vs. Age.
 Using the D3 techniques we taught you in class, create a scatter plot that represents each state with circle elements. You'll code this graphic in the app.js file of your homework directory—make sure you pull in the data from data.csv by using the d3.csv function. Your scatter plot should ultimately appear like the image at the top of this section.
 *Include state abbreviations in the circles.
