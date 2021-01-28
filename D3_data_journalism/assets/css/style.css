@@ -29,3 +29,15 @@ body {
   margin: 0;
   font-size: 16px;
 }
+
+.tooltip {
+  width: 120px;
+  height: 150px;
+  padding: 10px;
+  font: 12px sans-serif;
+  text-align: center;
+  color: white;
+  background: rgb(0, 174, 255);
+  border: 0;
+  border-radius: 10px
+}

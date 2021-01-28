@@ -65,27 +65,12 @@ var toolTip = d3.tip()
 // Step 2: Create the tooltip in chartGroup.
 chartGroup.call(toolTip);
 
-// //append the circles
-// chartGroup.append("g")
-//    .selectAll("dot")
-//    .data(stateData)
-//    .enter()
-//    .append("circle")
-//    .attr("cx", function(d){
-//        return xScale(d.healthcare);
-//     })
-//     .attr("cy", function(d){
-//         return yScale(d.income);
-//     })
-//     .attr("r", 5)
-//     .style("fill", "#69b3a2");
-
 //make dots
 var scatterDots = chartGroup.selectAll("dot")
                   .data(stateData)
                   .enter().append("g");
 
-
+//append the dots & add the mouseover/mouseout 
 scatterDots.append("circle")
             .attr("class", "dot")
             .attr("cx", function(d){
@@ -96,6 +81,7 @@ scatterDots.append("circle")
            })
            .attr("r", 10)
            .style("fill", "#69b3a2")
+           .attr("stroke", "black")
            .on("mouseover", function(d) {
             toolTip.show(d, this);
             })
@@ -103,20 +89,22 @@ scatterDots.append("circle")
             toolTip.hide(d);
             });
 
+           
+
 //append text to dots
 scatterDots.append("text").text(function(d){
   return d.abbr;
   })
   .attr("x", function (d) {
     return xScale(d.healthcare);
-})
-.attr("y", function (d) {
+  })
+  .attr("y", function (d) {
     return yScale(d.income)+3;
-})
-.attr("font-family", "sans-serif")
-.attr("font-size", "12px")
-.attr("text-anchor", "middle")
-.attr("fill", "white");
+    })
+  .attr("font-family", "sans-serif")
+  .attr("font-size", "12px")
+  .attr("text-anchor", "middle")
+  .attr("fill", "white");
 
 
 
