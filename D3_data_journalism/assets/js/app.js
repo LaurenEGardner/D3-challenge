@@ -27,23 +27,24 @@ var chartGroup = svg.append("g")
 d3.csv("./data.csv").then(function(stateData) {
     console.log(stateData);
 
+    //change the data i need from string to int
 stateData.forEach(function(data) {
-  data.age = +data.age;
-  data.poverty = +data.poverty;
+  data.income = +data.income;
+  data.healthcare = +data.healthcare;
 })
 
 //scales and axes
 
-var xPovertyScale = d3.scaleLinear() 
-    .domain(d3.extent(stateData, d => d.poverty)) // NEW!(ish). What is `.extent()`
+var xScale = d3.scaleLinear() 
+    .domain(d3.extent(stateData, d => d.healthcare)) // NEW!(ish). What is `.extent()`
     .range([0, width]);
 
-var yAgeScale = d3.scaleLinear()
-    .domain([0, d3.max(stateData, d => d.age)])
+var yScale = d3.scaleLinear()
+    .domain([0, d3.max(stateData, d => d.income)])
     .range([height, 0]);
 
-var bottomAxis = d3.axisBottom(xPovertyScale);
-var leftAxis = d3.axisLeft(yAgeScale);
+var bottomAxis = d3.axisBottom(xScale);
+var leftAxis = d3.axisLeft(yScale);
 
 chartGroup.append("g")
     .attr("transform", `translate(0, ${height})`)
@@ -52,16 +53,29 @@ chartGroup.append("g")
 chartGroup.append("g")
     .call(leftAxis);
 
+// Step 1: Initialize Tooltip
+var toolTip = d3.tip()
+      .attr("class", "tooltip")
+      .offset([80, -60])
+      .html(function(d) {
+        return (`<strong>${d.state}<strong><hr>Healthcare: ${d.healthcare}%
+        <br> Income: ${d.income}`);
+        });
+
+// Step 2: Create the tooltip in chartGroup.
+chartGroup.call(toolTip);
+
+// //append the circles
 // chartGroup.append("g")
 //    .selectAll("dot")
 //    .data(stateData)
 //    .enter()
 //    .append("circle")
 //    .attr("cx", function(d){
-//        return xPovertyScale(d.poverty);
+//        return xScale(d.healthcare);
 //     })
 //     .attr("cy", function(d){
-//         return yAgeScale(d.age);
+//         return yScale(d.income);
 //     })
 //     .attr("r", 5)
 //     .style("fill", "#69b3a2");
@@ -71,29 +85,39 @@ var scatterDots = chartGroup.selectAll("dot")
                   .data(stateData)
                   .enter().append("g");
 
+
 scatterDots.append("circle")
             .attr("class", "dot")
             .attr("cx", function(d){
-              return xPovertyScale(d.poverty);
+              return xScale(d.healthcare);
            })
            .attr("cy", function(d){
-               return yAgeScale(d.age);
+               return yScale(d.income);
            })
            .attr("r", 10)
-           .style("fill", "#69b3a2");
+           .style("fill", "#69b3a2")
+           .on("mouseover", function(d) {
+            toolTip.show(d, this);
+            })
+            .on("mouseout", function(d) {
+            toolTip.hide(d);
+            });
+
+//append text to dots
 scatterDots.append("text").text(function(d){
-                          return d.abbr;
-                          })
-                          .attr("x", function (d) {
-                            return xPovertyScale(d.poverty);
-                        })
-                        .attr("y", function (d) {
-                            return yAgeScale(d.age)+3;
-                        })
-                        .attr("font-family", "sans-serif")
-                        .attr("font-size", "12px")
-                        .attr("text-anchor", "middle")
-                        .attr("fill", "white");
+  return d.abbr;
+  })
+  .attr("x", function (d) {
+    return xScale(d.healthcare);
+})
+.attr("y", function (d) {
+    return yScale(d.income)+3;
+})
+.attr("font-family", "sans-serif")
+.attr("font-size", "12px")
+.attr("text-anchor", "middle")
+.attr("fill", "white");
+
 
 
 //x axis title
@@ -102,7 +126,7 @@ chartGroup.append("text")
 .attr("text-anchor", "middle")
 .attr("font-size", "16px")
 .attr("fill", "green")
-.text("Poverty(%)");
+.text("Healthcare(%)");
 
 //y axis title
 chartGroup.append("text")
@@ -112,7 +136,7 @@ chartGroup.append("text")
   .attr("dy", "1em")
   .style("text-anchor", "middle")
   .attr("fill", "green")
-  .text("Age");
+  .text("Avg Income");
 
 }, function(error) {
     console.log(error);
